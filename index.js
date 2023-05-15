@@ -36,7 +36,7 @@ async function connect() {
 connect()
   .then((documents) => {
     // Rota para retornar os documentos como resposta JSON
-    app.get('/', (req, res) => {
+    app.get('/response', (req, res) => {
       res.json(documents);
     });
 
