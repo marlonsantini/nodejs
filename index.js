@@ -8,7 +8,22 @@ async function connect() {
     await client.connect();
     console.log('Conexão com o MongoDB estabelecida com sucesso');
 
-    // Resto do código...
+    // Listar as coleções do banco de dados
+    const database = client.db();
+    const collections = await database.listCollections().toArray();
+    console.log('Coleções do banco de dados:');
+    collections.forEach((collection) => {
+      console.log(collection.name);
+    });
+
+    // Exibir documentos em uma coleção específica
+    const collectionName = 'nomeDaColecao';
+    const collection = database.collection(collectionName);
+    const documents = await collection.find({}).toArray();
+    console.log(`Documentos na coleção ${collectionName}:`);
+    documents.forEach((document) => {
+      console.log(document);
+    });
 
     await client.close();
     console.log('Conexão com o MongoDB encerrada');
