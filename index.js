@@ -32,7 +32,7 @@ async function connect() {
   }
 }
 
-// Chame a função connect para obter os documentos da coleção "response"
+// Chame a função connect para obter os documentos da coleção "responsee"
 connect()
   .then((documents) => {
     // Rota para retornar os documentos como resposta JSON
