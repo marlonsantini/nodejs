@@ -36,16 +36,20 @@ async function connect() {
 }
 
 // Chame a função connect para exibir os documentos na coleção "response"
-connect();
+connect()
+  .then(() => {
+    // Define a pasta que contém os arquivos de template (por exemplo, views/)
+    app.set('views', path.join(__dirname, 'views'));
 
-// Define a pasta que contém os arquivos de template (por exemplo, views/)
-app.set('views', path.join(__dirname, 'views'));
+    // Define o mecanismo de renderização de template (por exemplo, usando EJS)
+    app.set('view engine', 'ejs');
 
-// Define o mecanismo de renderização de template (por exemplo, usando EJS)
-app.set('view engine', 'ejs');
-
-// Inicia o servidor na porta desejada
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
-});
+    // Inicia o servidor na porta desejada
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => {
+      console.log(`Servidor rodando na porta ${port}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Erro ao conectar com o MongoDB', error);
+  });
