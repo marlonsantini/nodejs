@@ -11,17 +11,12 @@ async function connect() {
     await client.connect();
     console.log('Conexão com o MongoDB estabelecida com sucesso');
 
-    // Listar as coleções do banco de dados
+    // Selecionar a coleção "response"
     const database = client.db('heroes');
-    const collections = await database.listCollections().toArray();
-    console.log('Coleções do banco de dados:');
-    collections.forEach((collection) => {
-      console.log(collection.name);
-    });
-
-    // Exibir documentos em uma coleção específica
-    const collectionName = 'nomeDaColecao';
+    const collectionName = 'response';
     const collection = database.collection(collectionName);
+
+    // Exibir documentos na coleção "response"
     const documents = await collection.find({}).toArray();
     console.log(`Documentos na coleção ${collectionName}:`);
     documents.forEach((document) => {
@@ -35,6 +30,7 @@ async function connect() {
   }
 }
 
+// Chame a função connect para exibir os documentos na coleção "response"
 connect();
 
 app.get('/', (req, res) => {
