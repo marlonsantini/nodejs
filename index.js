@@ -12,7 +12,7 @@ async function connect() {
     console.log('Conexão com o MongoDB estabelecida com sucesso');
 
     // Listar as coleções do banco de dados
-    const database = client.db();
+    const database = client.db('heroes');
     const collections = await database.listCollections().toArray();
     console.log('Coleções do banco de dados:');
     collections.forEach((collection) => {
