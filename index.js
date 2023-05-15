@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 
 const uri = 'mongodb://mongo:QQLhNtw6ChtW5SOp07V4@containers-us-west-65.railway.app:6637';
+let documents = [];
 
 async function connect() {
   try {
@@ -16,7 +17,7 @@ async function connect() {
     const collection = database.collection(collectionName);
 
     // Exibir documentos na coleção "response"
-    const documents = await collection.find({}).toArray();
+    documents = await collection.find({}).toArray();
     console.log(`Documentos na coleção ${collectionName}:`);
     documents.forEach((document) => {
       console.log(document);
@@ -24,17 +25,16 @@ async function connect() {
 
     await client.close();
     console.log('Conexão com o MongoDB encerrada');
-
-    return documents;
   } catch (error) {
     console.error('Erro ao conectar com o MongoDB', error);
-    throw error;
   }
 }
 
-// Chame a função connect para obter os documentos da coleção "responsee"
+// Chame a função connect para obter os documentos da coleção "response"
 connect()
-  .then((documents) => {
+  .then(() => {
+    // Resto do seu código...
+
     // Rota para retornar os documentos como resposta JSON
     app.get('/response', (req, res) => {
       res.json(documents);
@@ -49,3 +49,19 @@ connect()
   .catch((error) => {
     console.error('Erro ao conectar com o MongoDB', error);
   });
+
+// Lógica para verificar o banco de dados em intervalos de tempo
+setInterval(async () => {
+  try {
+    const client = new MongoClient(uri, { useUnifiedTopology: true });
+    await client.connect();
+    const database = client.db('heroes');
+    const collection = database.collection('response');
+    const updatedDocuments = await collection.find({}).toArray();
+    console.log('Banco de dados atualizado:', updatedDocuments);
+    documents = updatedDocuments;
+    await client.close();
+  } catch (error) {
+    console.error('Erro ao verificar o banco de dados', error);
+  }
+}, 5000); // Verificar a cada 5 segundos
