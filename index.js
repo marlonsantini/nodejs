@@ -23,6 +23,11 @@ async function connect() {
       console.log(document);
     });
 
+    // Passar os documentos para a página index.ejs
+    app.get('/', (req, res) => {
+      res.render('index', { documents });
+    });
+
     await client.close();
     console.log('Conexão com o MongoDB encerrada');
   } catch (error) {
@@ -32,14 +37,6 @@ async function connect() {
 
 // Chame a função connect para exibir os documentos na coleção "response"
 connect();
-
-app.get('/', (req, res) => {
-  // Exemplo de dados a serem exibidos
-  const data = { name: 'John', age: 30 };
-
-  // Renderiza um arquivo de template (por exemplo, index.ejs) e passa os dados para ele
-  res.render('index', { data });
-});
 
 // Define a pasta que contém os arquivos de template (por exemplo, views/)
 app.set('views', path.join(__dirname, 'views'));

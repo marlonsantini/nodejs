@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Railway</title>
+  <title>Exemplo de documentos do MongoDB</title>
 </head>
 <body>
-  <h1>Dados:</h1>
-  <p>Nome: <%= data.name %></p>
-  <p>Idade: <%= data.age %></p>
+  <h1>Documentos na coleção "response"</h1>
+  <% documents.forEach((document) => { %>
+    <p>Nome: <%= document.name %></p>
+    <p>Idade: <%= document.age %></p>
+    <hr>
+  <% }); %>
 </body>
 </html>
