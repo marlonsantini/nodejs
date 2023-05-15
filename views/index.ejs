@@ -6,8 +6,8 @@
 <body>
   <h1>Documentos na coleção "response"</h1>
   <% documents.forEach((document) => { %>
-    <p>Nome: <%= document.name %></p>
-    <p>Idade: <%= document.age %></p>
+    <p>Nome: <%= document.displayName %></p>
+    <p>OtherName: <%= document.developerName %></p>
     <hr>
   <% }); %>
 </body>
