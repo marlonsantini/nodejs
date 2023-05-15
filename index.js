@@ -25,7 +25,15 @@ async function connect() {
 
     // Passar os documentos para a página index.ejs
     app.get('/', (req, res) => {
-      res.render('index', { documents });
+      // Mapear os documentos para extrair apenas os campos desejados
+      const formattedDocuments = documents.map((document) => {
+        return {
+          displayName: document.displayName,
+          developerName: document.developerName
+        };
+      });
+
+      res.render('index', { documents: formattedDocuments });
     });
 
     await client.close();
