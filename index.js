@@ -1,6 +1,5 @@
 const { MongoClient } = require('mongodb');
 const express = require('express');
-const path = require('path');
 const app = express();
 
 const uri = 'mongodb://mongo:QQLhNtw6ChtW5SOp07V4@containers-us-west-65.railway.app:6637';
@@ -23,34 +22,23 @@ async function connect() {
       console.log(document);
     });
 
-    // Passar os documentos para a página index.ejs
-    app.get('/', (req, res) => {
-      // Mapear os documentos para extrair apenas os campos desejados
-      const formattedDocuments = documents.map((document) => {
-        return {
-          displayName: document.displayName,
-          developerName: document.developerName
-        };
-      });
-
-      res.render('index', { documents: formattedDocuments });
-    });
-
     await client.close();
     console.log('Conexão com o MongoDB encerrada');
+
+    return documents;
   } catch (error) {
     console.error('Erro ao conectar com o MongoDB', error);
+    throw error;
   }
 }
 
-// Chame a função connect para exibir os documentos na coleção "response"
+// Chame a função connect para obter os documentos da coleção "response"
 connect()
-  .then(() => {
-    // Define a pasta que contém os arquivos de template (por exemplo, views/)
-    app.set('views', path.join(__dirname, 'views'));
-
-    // Define o mecanismo de renderização de template (por exemplo, usando EJS)
-    app.set('view engine', 'ejs');
+  .then((documents) => {
+    // Rota para retornar os documentos como resposta JSON
+    app.get('/', (req, res) => {
+      res.json(documents);
+    });
 
     // Inicia o servidor na porta desejada
     const port = process.env.PORT || 3000;
