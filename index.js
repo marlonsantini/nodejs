@@ -9,15 +9,7 @@ async function connect() {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     await client.connect();
     console.log('Conexão com o MongoDB estabelecida com sucesso');
-    await client.close();
-    console.log('Conexão com o MongoDB encerrada');
-  } catch (error) {
-    console.error('Erro ao conectar com o MongoDB', error);
-  }
-}
 
-connect()
-  .then(() => {
     // Rota para a raiz ("/") da aplicação
     app.get('/', (req, res) => {
       res.send('Servidor online!');
@@ -25,9 +17,6 @@ connect()
 
     app.get('/heroes', async (req, res) => {
       try {
-        const client = new MongoClient(uri, { useUnifiedTopology: true });
-        await client.connect();
-
         const heroesCollection = client.db('overwatch').collection('heroes');
         const heroesDocuments = await heroesCollection.find({}).toArray();
 
@@ -36,9 +25,14 @@ connect()
           console.log(document);
         });
 
-        await client.close();
-
-        res.json(heroesDocuments);
+        // Verifica se há documentos retornados
+        if (heroesDocuments.length > 0) {
+          // Retorna apenas o primeiro documento do array
+          const heroDocument = heroesDocuments[0];
+          res.json(heroDocument);
+        } else {
+          res.status(404).json({ error: 'Nenhum herói encontrado' });
+        }
       } catch (error) {
         console.error('Erro ao verificar o banco de dados', error);
         res.status(500).json({ error: 'Erro ao verificar o banco de dados' });
@@ -49,23 +43,21 @@ connect()
     app.listen(port, () => {
       console.log(`Servidor rodando na porta ${port}`);
     });
-  })
-  .catch((error) => {
-    console.error('Erro ao conectar com o MongoDB', error);
-  });
 
-setInterval(async () => {
-  try {
-    const client = new MongoClient(uri, { useUnifiedTopology: true });
-    await client.connect();
+    // Verificar a cada 5 segundos
+    setInterval(async () => {
+      try {
+        const heroesCollection = client.db('overwatch').collection('heroes');
+        const updatedHeroesDocuments = await heroesCollection.find({}).toArray();
 
-    const heroesCollection = client.db('overwatch').collection('heroes');
-    const updatedHeroesDocuments = await heroesCollection.find({}).toArray();
-
-    console.log('Documentos atualizados na coleção heroes:', updatedHeroesDocuments);
-
-    await client.close();
+        console.log('Documentos atualizados na coleção heroes:', updatedHeroesDocuments);
+      } catch (error) {
+        console.error('Erro ao verificar o banco de dados', error);
+      }
+    }, 5000);
   } catch (error) {
-    console.error('Erro ao verificar o banco de dados', error);
+    console.error('Erro ao conectar com o MongoDB', error);
   }
-}, 5000); // Verificar a cada 5 segundos
+}
+
+connect();
