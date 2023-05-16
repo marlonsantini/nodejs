@@ -11,12 +11,12 @@ async function connect() {
     await client.connect();
     console.log('Conexão com o MongoDB estabelecida com sucesso');
 
-    // Selecionar a coleção "response"
-    const database = client.db('heroes');
-    const collectionName = 'response';
+    // Selecionar a coleção "support"
+    const database = client.db('overwatch');
+    const collectionName = 'support';
     const collection = database.collection(collectionName);
 
-    // Exibir documentos na coleção "response"
+    // Exibir documentos na coleção "support"
     documents = await collection.find({}).toArray();
     console.log(`Documentos na coleção ${collectionName}:`);
     documents.forEach((document) => {
@@ -30,13 +30,13 @@ async function connect() {
   }
 }
 
-// Chame a função connect para obter os documentos da coleção "response"
+// Chame a função connect para obter os documentos da coleção "support"
 connect()
   .then(() => {
     // Resto do seu código...
 
     // Rota para retornar os documentos como resposta JSON
-    app.get('/response', (req, res) => {
+    app.get('/support', (req, res) => {
       res.json(documents);
     });
 
