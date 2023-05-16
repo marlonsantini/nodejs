@@ -71,6 +71,24 @@ connect()
       res.json(damageDocuments);
     });
 
+    // Rota para combinar heróis de diferentes papéis
+    app.get('/heroes', (req, res) => {
+    // Obtenha os heróis de cada papel
+    const supportHero = getRandomHero(supportDocuments);
+    const tankHero = getRandomHero(tankDocuments);
+    const damageHero = getRandomHero(damageDocuments);
+
+    // Combine os heróis em um objeto
+    const combinedHeroes = {
+      support: supportHero,
+      tank: tankHero,
+      damage: damageHero
+    };
+
+    // Envie a resposta como JSON
+    res.json(combinedHeroes);
+    });
+
     // Inicia o servidor na porta desejada
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
