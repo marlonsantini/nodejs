@@ -55,8 +55,8 @@ setInterval(async () => {
   try {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     await client.connect();
-    const database = client.db('heroes');
-    const collection = database.collection('response');
+    const database = client.db('overwatch');
+    const collection = database.collection('support');
     const updatedDocuments = await collection.find({}).toArray();
     console.log('Banco de dados atualizado:', updatedDocuments);
     documents = updatedDocuments;
