@@ -76,25 +76,6 @@ connect()
     app.listen(port, () => {
       console.log(`Servidor rodando na porta ${port}`);
     });
-
-    // Rota para combinar heróis de diferentes papéis
-    app.get('/heroes', (req, res) => {
-      // Obtenha um herói aleatório de cada papel
-      const supportHero = getRandomHero(supportDocuments);
-      const tankHero = getRandomHero(tankDocuments);
-      const damageHero = getRandomHero(damageDocuments);
-
-      // Combine os heróis em um objeto
-      const combinedHeroes = {
-        support: supportHero,
-        tank: tankHero,
-        damage: damageHero
-      };
-
-      // Envie a resposta como JSON
-      res.json(combinedHeroes);
-    });
-
   })
   .catch((error) => {
     console.error('Erro ao conectar com o MongoDB', error);
