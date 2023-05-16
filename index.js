@@ -18,6 +18,11 @@ async function connect() {
 
 connect()
   .then(() => {
+    // Rota para a raiz ("/") da aplicação
+    app.get('/', (req, res) => {
+      res.send('Servidor online!');
+    });
+
     app.get('/heroes', async (req, res) => {
       try {
         const client = new MongoClient(uri, { useUnifiedTopology: true });
