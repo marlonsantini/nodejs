@@ -1,8 +1,12 @@
 const { MongoClient } = require('mongodb');
 const express = require('express');
+const querystring = require('querystring');
+
 const app = express();
 
 const uri = 'mongodb://mongo:QQLhNtw6ChtW5SOp07V4@containers-us-west-65.railway.app:6637';
+const dbName = 'overwatch';
+const collectionName = 'heroes';
 
 async function connect() {
   try {
@@ -15,10 +19,23 @@ async function connect() {
       res.send('Servidor online!');
     });
 
+    // Rota para buscar heróis com base em parâmetros
     app.get('/heroes', async (req, res) => {
       try {
-        const heroesCollection = client.db('overwatch').collection('heroes');
-        const heroesDocuments = await heroesCollection.find({}).toArray();
+        const heroesCollection = client.db(dbName).collection(collectionName);
+
+        // Extrai os parâmetros da URL
+        const queryParams = querystring.parse(req.url.split('?')[1]);
+        const { displayName } = queryParams;
+
+        // Monta a consulta com base nos parâmetros fornecidos
+        const query = {};
+
+        if (displayName) {
+          query['data.displayName'] = displayName;
+        }
+
+        const heroesDocuments = await heroesCollection.find(query).toArray();
 
         console.log('Documentos na coleção heroes:');
         heroesDocuments.forEach((document) => {
@@ -27,9 +44,7 @@ async function connect() {
 
         // Verifica se há documentos retornados
         if (heroesDocuments.length > 0) {
-          // Retorna apenas o primeiro documento do array
-          const heroDocument = heroesDocuments[0];
-          res.json(heroDocument);
+          res.json(heroesDocuments);
         } else {
           res.status(404).json({ error: 'Nenhum herói encontrado' });
         }
@@ -47,7 +62,7 @@ async function connect() {
     // Verificar a cada 5 segundos
     setInterval(async () => {
       try {
-        const heroesCollection = client.db('overwatch').collection('heroes');
+        const heroesCollection = client.db(dbName).collection(collectionName);
         const updatedHeroesDocuments = await heroesCollection.find({}).toArray();
 
         console.log('Documentos atualizados na coleção heroes:', updatedHeroesDocuments);
