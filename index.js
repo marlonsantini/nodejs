@@ -39,7 +39,13 @@ async function connect() {
 
         // Verifica se há documentos retornados
         if (heroesDocuments.length > 0) {
-          res.json(heroesDocuments);
+          if (heroesDocuments.length === 1) {
+            // Retorna o único documento encontrado
+            res.json(heroesDocuments[0]);
+          } else {
+            // Retorna o array de documentos
+            res.json(heroesDocuments);
+          }
         } else {
           res.status(404).json({ error: 'Nenhum herói encontrado' });
         }
