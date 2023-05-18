@@ -4,6 +4,9 @@ const querystring = require('querystring');
 
 const app = express();
 
+// Middleware para tratar todas as requisições como JSON
+app.use(express.json());
+
 const uri = 'mongodb://mongo:QQLhNtw6ChtW5SOp07V4@containers-us-west-65.railway.app:6637';
 const dbName = 'overwatch';
 const collectionName = 'heroes';
@@ -20,8 +23,7 @@ async function connect() {
         const heroesCollection = client.db(dbName).collection(collectionName);
 
         // Extrai os parâmetros da URL
-        const queryParams = querystring.parse(req.url.split('?')[1]);
-        const { _id } = queryParams;
+        const { _id } = req.query;
 
         // Monta a consulta com base nos parâmetros fornecidos
         const query = {};
