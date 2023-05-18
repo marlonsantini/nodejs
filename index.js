@@ -9,7 +9,8 @@ app.use(express.json());
 
 const uri = 'mongodb://mongo:QQLhNtw6ChtW5SOp07V4@containers-us-west-65.railway.app:6637';
 const dbName = 'overwatch';
-const collectionName = 'heroes';
+const collectionNameHeroes = 'heroes';
+const collectionNameMaps = 'maps';
 
 async function connect() {
   try {
@@ -20,7 +21,7 @@ async function connect() {
     // Rota para buscar heróis com base em parâmetros
     app.get('/heroes', async (req, res) => {
       try {
-        const heroesCollection = client.db(dbName).collection(collectionName);
+        const heroesCollection = client.db(dbName).collection(collectionNameHeroes);
 
         // Extrai os parâmetros da URL
         const { _id } = req.query;
@@ -49,7 +50,7 @@ async function connect() {
     // Rota para buscar detalhes de um herói específico
     app.get('/heroes/:id', async (req, res) => {
       try {
-        const heroesCollection = client.db(dbName).collection(collectionName);
+        const heroesCollection = client.db(dbName).collection(collectionNameHeroes);
 
         // Extrai o parâmetro de ID da URL
         const { id } = req.params;
@@ -71,6 +72,60 @@ async function connect() {
       }
     });
 
+    // Rota para buscar mapas com base em parâmetros
+    app.get('/maps', async (req, res) => {
+      try {
+        const mapsCollection = client.db(dbName).collection(collectionNameMaps);
+
+        // Extrai os parâmetros da URL
+        const { _id } = req.query;
+
+        // Monta a consulta com base nos parâmetros fornecidos
+        const query = {};
+
+        if (_id) {
+          query['_id'] = new ObjectId(_id);
+        }
+
+        const mapsDocuments = await mapsCollection.find(query).toArray();
+
+        // Verifica se há documentos retornados
+        if (mapsDocuments.length > 0) {
+          res.json(mapsDocuments);
+        } else {
+          res.status(404).json({ error: 'Nenhum mapa encontrado' });
+        }
+      } catch (error) {
+        console.error('Erro ao verificar o banco de dados', error);
+        res.status(500).json({ error: 'Erro ao verificar o banco de dados' });
+      }
+    });
+
+    // Rota para buscar detalhes de um mapa específico
+    app.get('/maps/:id', async (req, res) => {
+      try {
+        const mapsCollection = client.db(dbName).collection(collectionNameMaps);
+
+        // Extrai o parâmetro de ID da URL
+        const { id } = req.params;
+
+        // Monta a consulta com base no ID fornecido
+        const query = { _id: new ObjectId(id) };
+
+        const mapDocument = await mapsCollection.findOne(query);
+
+        // Verifica se o documento foi encontrado
+        if (mapDocument) {
+          res.json(mapDocument);
+        } else {
+          res.status(404).json({ error: 'Mapa não encontrado' });
+        }
+      } catch (error) {
+        console.error('Erro ao verificar o banco de dados', error);
+        res.status(500).json({ error: 'Erro ao verificar o banco de dados' });
+      }
+    });
+
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
       console.log(`Servidor rodando na porta ${port}`);
@@ -79,7 +134,7 @@ async function connect() {
     // Verificar a cada 5 segundos
     setInterval(async () => {
       try {
-        const heroesCollection = client.db(dbName).collection(collectionName);
+        const heroesCollection = client.db(dbName).collection(collectionNameHeroes);
         const updatedHeroesDocuments = await heroesCollection.find({}).toArray();
 
         console.log('Documentos atualizados na coleção heroes:', updatedHeroesDocuments);
