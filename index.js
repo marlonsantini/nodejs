@@ -46,6 +46,31 @@ async function connect() {
       }
     });
 
+    // Rota para buscar detalhes de um herói específico
+    app.get('/heroes/:id', async (req, res) => {
+      try {
+        const heroesCollection = client.db(dbName).collection(collectionName);
+
+        // Extrai o parâmetro de ID da URL
+        const { id } = req.params;
+
+        // Monta a consulta com base no ID fornecido
+        const query = { _id: new ObjectId(id) };
+
+        const heroDocument = await heroesCollection.findOne(query);
+
+        // Verifica se o documento foi encontrado
+        if (heroDocument) {
+          res.json(heroDocument);
+        } else {
+          res.status(404).json({ error: 'Herói não encontrado' });
+        }
+      } catch (error) {
+        console.error('Erro ao verificar o banco de dados', error);
+        res.status(500).json({ error: 'Erro ao verificar o banco de dados' });
+      }
+    });
+
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
       console.log(`Servidor rodando na porta ${port}`);
