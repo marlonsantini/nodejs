@@ -46,26 +46,6 @@ async function connect() {
       }
     });
 
-    // Rota para buscar herói com base no ID
-    app.get('/heroes/:id', async (req, res) => {
-      try {
-        const heroesCollection = client.db(dbName).collection(collectionName);
-        const heroId = req.params.id;
-
-        const heroDocument = await heroesCollection.findOne({ _id: new ObjectId(heroId) });
-
-        // Verifica se o documento foi encontrado
-        if (heroDocument) {
-          res.json(heroDocument);
-        } else {
-          res.status(404).json({ error: 'Herói não encontrado' });
-        }
-      } catch (error) {
-        console.error('Erro ao verificar o banco de dados', error);
-        res.status(500).json({ error: 'Erro ao verificar o banco de dados' });
-      }
-    });
-
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
       console.log(`Servidor rodando na porta ${port}`);
