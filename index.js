@@ -14,11 +14,6 @@ async function connect() {
     await client.connect();
     console.log('Conexão com o MongoDB estabelecida com sucesso');
 
-    // Rota para a raiz ("/") da aplicação
-    app.get('/', (req, res) => {
-      res.send('Servidor online!');
-    });
-
     // Rota para buscar heróis com base em parâmetros
     app.get('/heroes', async (req, res) => {
       try {
@@ -26,13 +21,13 @@ async function connect() {
 
         // Extrai os parâmetros da URL
         const queryParams = querystring.parse(req.url.split('?')[1]);
-        const { displayName } = queryParams;
+        const { _id } = queryParams;
 
         // Monta a consulta com base nos parâmetros fornecidos
         const query = {};
 
-        if (displayName) {
-          query['data.displayName'] = displayName;
+        if (_id) {
+          query['_id'] = Number(_id);
         }
 
         const heroesDocuments = await heroesCollection.find(query).toArray();
