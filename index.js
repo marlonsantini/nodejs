@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const express = require('express');
 const querystring = require('querystring');
 
@@ -27,7 +27,7 @@ async function connect() {
         const query = {};
 
         if (_id) {
-          query['_id'] = _id;
+          query['_id'] = new ObjectId(_id);
         }
 
         const heroesDocuments = await heroesCollection.find(query).toArray();
