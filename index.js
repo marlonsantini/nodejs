@@ -17,7 +17,7 @@ async function connect() {
     await client.connect();
     console.log('Conexão com o MongoDB estabelecida com sucesso');
 
-    // Rota para buscar o primeiro herói com base em parâmetros
+    // Rota para buscar heróis com base em parâmetros
     app.get('/heroes', async (req, res) => {
       try {
         const heroesCollection = client.db(dbName).collection(collectionName);
@@ -32,11 +32,11 @@ async function connect() {
           query['_id'] = new ObjectId(_id);
         }
 
-        const heroDocument = await heroesCollection.findOne(query);
+        const heroesDocuments = await heroesCollection.find(query).toArray();
 
-        // Verifica se um herói foi encontrado
-        if (heroDocument) {
-          res.json(heroDocument);
+        // Verifica se há documentos retornados
+        if (heroesDocuments.length > 0) {
+          res.json(heroesDocuments);
         } else {
           res.status(404).json({ error: 'Nenhum herói encontrado' });
         }
