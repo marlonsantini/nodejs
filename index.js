@@ -27,7 +27,7 @@ async function connect() {
         const query = {};
 
         if (_id) {
-          query['_id'] = Number(_id);
+          query['_id'] = _id;
         }
 
         const heroesDocuments = await heroesCollection.find(query).toArray();
