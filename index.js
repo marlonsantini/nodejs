@@ -11,6 +11,7 @@ const uri = 'mongodb://mongo:QQLhNtw6ChtW5SOp07V4@containers-us-west-65.railway.
 const dbName = 'overwatch';
 const collectionNameHeroes = 'heroes';
 const collectionNameMaps = 'maps';
+const collectionNamePatchs = 'patchs';
 
 async function connect() {
   try {
@@ -119,6 +120,60 @@ async function connect() {
           res.json(mapDocument);
         } else {
           res.status(404).json({ error: 'Mapa não encontrado' });
+        }
+      } catch (error) {
+        console.error('Erro ao verificar o banco de dados', error);
+        res.status(500).json({ error: 'Erro ao verificar o banco de dados' });
+      }
+    });
+
+    // Rota para buscar patchs com base em parâmetros
+    app.get('/patchs', async (req, res) => {
+      try {
+        const patchsCollection = client.db(dbName).collection(collectionNamePatchs);
+
+        // Extrai os parâmetros da URL
+        const { _id } = req.query;
+
+        // Monta a consulta com base nos parâmetros fornecidos
+        const query = {};
+
+        if (_id) {
+          query['_id'] = new ObjectId(_id);
+        }
+
+        const patchsDocuments = await patchsCollection.find(query).toArray();
+
+        // Verifica se há documentos retornados
+        if (patchsDocuments.length > 0) {
+          res.json(patchsDocuments);
+        } else {
+          res.status(404).json({ error: 'Nenhum patch encontrado' });
+        }
+      } catch (error) {
+        console.error('Erro ao verificar o banco de dados', error);
+        res.status(500).json({ error: 'Erro ao verificar o banco de dados' });
+      }
+    });
+
+    // Rota para buscar detalhes de um patch específico
+    app.get('/patchs/:id', async (req, res) => {
+      try {
+        const patchsCollection = client.db(dbName).collection(collectionNamePatchs);
+
+        // Extrai o parâmetro de ID da URL
+        const { id } = req.params;
+
+        // Monta a consulta com base no ID fornecido
+        const query = { _id: new ObjectId(id) };
+
+        const patchDocument = await patchsCollection.findOne(query);
+
+        // Verifica se o documento foi encontrado
+        if (patchDocument) {
+          res.json(patchDocument);
+        } else {
+          res.status(404).json({ error: 'Patch não encontrado' });
         }
       } catch (error) {
         console.error('Erro ao verificar o banco de dados', error);
