@@ -1,9 +1,11 @@
-# nodejs
-A minimal Node.js web application.
-
+<h1 align="center">
+Node.js and MongoDB API for Overwatch
+</h1>
 <p align="center">
-Node.js and MongoDB API for Overwatch Game by Blizzard
+  <a href="https://www.mongodb.com"><img alt="MongoDB" src="https://img.shields.io/badge/-MongoDB-4EA94B?logo=mongodb&logoColor=white&style=plastic"/></a>
+   <a href="https://nodejs.org"><img alt="NodeJS" src="https://img.shields.io/badge/-NodeJS-43853D?logo=node.js&logoColor=white&style=plastic"/></a>
 </p>
+
 
 ## Technologies Used:
 
