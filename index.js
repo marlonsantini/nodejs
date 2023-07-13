@@ -12,7 +12,7 @@ const dbName = 'overwatch';
 const collectionNameHeroes = 'heroes';
 const collectionNameMaps = 'maps';
 const collectionNamePatchs = 'patchs';
-const collectionNameComboStrong = 'combostrong';
+const collectionNameProfile = 'profile';
 
 async function connect() {
   try {
@@ -182,10 +182,10 @@ async function connect() {
       }
     });
 
-    // Rota para buscar combos fortes com base em parâmetros
-    app.get('/combostrong', async (req, res) => {
+    // Rota para buscar perfis com base em parâmetros
+    app.get('/profile', async (req, res) => {
       try {
-        const comboStrongCollection = client.db(dbName).collection(collectionNameComboStrong);
+        const profileCollection = client.db(dbName).collection(collectionNameProfile);
 
         // Extrai os parâmetros da URL
         const { _id } = req.query;
@@ -197,13 +197,13 @@ async function connect() {
           query['_id'] = new ObjectId(_id);
         }
 
-        const comboStrongDocuments = await comboStrongCollection.find(query).toArray();
+        const profileDocuments = await profileCollection.find(query).toArray();
 
         // Verifica se há documentos retornados
-        if (comboStrongDocuments.length > 0) {
-          res.json(comboStrongDocuments);
+        if (profileDocuments.length > 0) {
+          res.json(profileDocuments);
         } else {
-          res.status(404).json({ error: 'Nenhum combo forte encontrado' });
+          res.status(404).json({ error: 'Nenhum perfil encontrado' });
         }
       } catch (error) {
         console.error('Erro ao verificar o banco de dados', error);
@@ -211,10 +211,10 @@ async function connect() {
       }
     });
 
-    // Rota para buscar detalhes de um combo forte específico
-    app.get('/combostrong/:id', async (req, res) => {
+    // Rota para buscar detalhes de um perfil específico
+    app.get('/profile/:id', async (req, res) => {
       try {
-        const comboStrongCollection = client.db(dbName).collection(collectionNameComboStrong);
+        const profileCollection = client.db(dbName).collection(collectionNameProfile);
 
         // Extrai o parâmetro de ID da URL
         const { id } = req.params;
@@ -222,13 +222,13 @@ async function connect() {
         // Monta a consulta com base no ID fornecido
         const query = { _id: new ObjectId(id) };
 
-        const comboStrongDocument = await comboStrongCollection.findOne(query);
+        const profileDocument = await profileCollection.findOne(query);
 
         // Verifica se o documento foi encontrado
-        if (comboStrongDocument) {
-          res.json(comboStrongDocument);
+        if (profileDocument) {
+          res.json(profileDocument);
         } else {
-          res.status(404).json({ error: 'Combo forte não encontrado' });
+          res.status(404).json({ error: 'Perfil não encontrado' });
         }
       } catch (error) {
         console.error('Erro ao verificar o banco de dados', error);
