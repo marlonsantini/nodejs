@@ -12,6 +12,7 @@ const dbName = 'overwatch';
 const collectionNameHeroes = 'heroes';
 const collectionNameMaps = 'maps';
 const collectionNamePatchs = 'patchs';
+const collectionNameComboStrong = 'combostrong';
 
 async function connect() {
   try {
@@ -174,6 +175,60 @@ async function connect() {
           res.json(patchDocument);
         } else {
           res.status(404).json({ error: 'Patch não encontrado' });
+        }
+      } catch (error) {
+        console.error('Erro ao verificar o banco de dados', error);
+        res.status(500).json({ error: 'Erro ao verificar o banco de dados' });
+      }
+    });
+
+    // Rota para buscar combos fortes com base em parâmetros
+    app.get('/combostrong', async (req, res) => {
+      try {
+        const comboStrongCollection = client.db(dbName).collection(collectionNameComboStrong);
+
+        // Extrai os parâmetros da URL
+        const { _id } = req.query;
+
+        // Monta a consulta com base nos parâmetros fornecidos
+        const query = {};
+
+        if (_id) {
+          query['_id'] = new ObjectId(_id);
+        }
+
+        const comboStrongDocuments = await comboStrongCollection.find(query).toArray();
+
+        // Verifica se há documentos retornados
+        if (comboStrongDocuments.length > 0) {
+          res.json(comboStrongDocuments);
+        } else {
+          res.status(404).json({ error: 'Nenhum combo forte encontrado' });
+        }
+      } catch (error) {
+        console.error('Erro ao verificar o banco de dados', error);
+        res.status(500).json({ error: 'Erro ao verificar o banco de dados' });
+      }
+    });
+
+    // Rota para buscar detalhes de um combo forte específico
+    app.get('/combostrong/:id', async (req, res) => {
+      try {
+        const comboStrongCollection = client.db(dbName).collection(collectionNameComboStrong);
+
+        // Extrai o parâmetro de ID da URL
+        const { id } = req.params;
+
+        // Monta a consulta com base no ID fornecido
+        const query = { _id: new ObjectId(id) };
+
+        const comboStrongDocument = await comboStrongCollection.findOne(query);
+
+        // Verifica se o documento foi encontrado
+        if (comboStrongDocument) {
+          res.json(comboStrongDocument);
+        } else {
+          res.status(404).json({ error: 'Combo forte não encontrado' });
         }
       } catch (error) {
         console.error('Erro ao verificar o banco de dados', error);
