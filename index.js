@@ -178,7 +178,7 @@ async function connect() {
         }
       } catch (error) {
         console.error('Erro ao verificar o banco de dados', error);
-        res.status(500).json({ error: 'Erro ao verificar o banco de dados' });
+        res.status(500).json({ error: 'Erro ao verificar o banco de dados'});
       }
     });
 
