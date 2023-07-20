@@ -7,7 +7,7 @@ const app = express();
 // Middleware para tratar todas as requisições como JSON
 app.use(express.json());
 
-const uri = 'mongodb://mongo:QQLhNtw6ChtW5SOp07V4@containers-us-west-65.railway.app:6637';
+const uri = 'mongosh "mongodb://mongo:cKrh7Hv9I6VmTMf1pzRc@containers-us-west-65.railway.app:6637"';
 const dbName = 'overwatch';
 const collectionNameHeroes = 'heroes';
 const collectionNameMaps = 'maps';
