@@ -6,7 +6,7 @@
   "author": "alphasec",
   "license": "MIT",
   "dependencies": {
-    "ejs": "^3.1.6",
+    "ejs": "^3.1.10",
     "express": "^4.17.1",
     "mongodb": "^6.8.0",
     "querystring": "^0.2.1"
